@@ -56,6 +56,22 @@ def get_files(dir):
 
 
 
+def clear_files(dir):
+
+    _location = config.ROOT_PATH + dir
+
+    for _ in get_files(dir):
+        _path = os.path.join(_location, _)
+        os.remove(_path)
 
 
+def delete_file(dir, file):
+
+    _location = config.ROOT_PATH + dir
+
+    _path = os.path.join(_location, file)
+
+    os.remove(_path)
+    
+        
 
