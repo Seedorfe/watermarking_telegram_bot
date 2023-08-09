@@ -48,8 +48,11 @@ def make_needed_dir():
         print("--------\nwe have a problem when making needed dirs\n-------- ")
         sys.exit(1)
 
-        
 
+
+        
+def get_files(dir):
+    return next(os.walk(config.ROOT_PATH + dir, (None, None, [])))[2]
 
 
 
