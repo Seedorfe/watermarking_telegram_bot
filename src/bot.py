@@ -30,6 +30,7 @@ main_menu = [
 
 watermark_options_menu = [
     [telegram.KeyboardButton(config.message_commands["watermark_text"]),telegram.KeyboardButton(config.options_text_commands["position"])],
+    [telegram.KeyboardButton(config.options_text_commands["fontsize"])],
     [telegram.KeyboardButton(config.message_commands["cancel"]), telegram.KeyboardButton(config.options_text_commands["opacity"])]
 ]
 
@@ -191,22 +192,23 @@ async def process_watermark_command(inp : telegram.Update, context : ext.Context
         await bot.send_message(inp.effective_message.chat_id, config.bot_messages["starting_process_warning"])
 
         _watermark_position = config.options_values["watermark_position"][databace.get_options("position")]
-        print("##########")
-        print(_watermark_position)
-        print(databace.get_watermark_text())
+        
+        
         for _ in init.get_files("/file"):
 
             _temp_bot_1 = editor.VideoFileClip(config.ROOT_PATH + "/file/" + _)
+            _video_duration = _temp_bot_1.duration
 
             _temp_bot_2 = editor.TextClip(
                 txt = databace.get_watermark_text(),
-                fontsize=50,
+                fontsize=databace.get_options("fontsize"),
                 color="white"
             )
 
             _temp_bot_2 = _temp_bot_2.set_position(_watermark_position)
             _temp_bot_2 = _temp_bot_2.set_opacity(databace.get_options("opacity"))
-            _temp_bot_2 = _temp_bot_2.set_duration(databace.get_options("duration"))
+            _temp_bot_2 = _temp_bot_2.set_duration(databace.get_options("duration")).set_start(
+                (_video_duration/2) - (databace.get_options("duration")/2))
 
 
             _temp_bot_video = editor.CompositeVideoClip([_temp_bot_1, _temp_bot_2]).set_duration(_temp_bot_1.duration)
@@ -322,7 +324,8 @@ async def text_message_handler(inp : telegram.Update, context : ext.ContextTypes
 
         elif inp.effective_message.text in [
             config.options_text_commands["position"],
-            config.options_text_commands["opacity"]
+            config.options_text_commands["opacity"],
+            config.options_text_commands["fontsize"]
         ]:
             await options_keyboard_handler(inp= inp, context= context)
 
@@ -386,6 +389,35 @@ async def options_keyboard_handler(inp, context):
             reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
             ),
 
+        elif inp.effective_message.text == config.options_text_commands["fontsize"]:
+
+            _set_bot_mode("set_watermark_options")
+            # "watermark_fontsize" : ["10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"]
+            _key_board = [
+                [
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][0]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][1]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][2]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][3]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][4])
+                ],
+                [
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][5]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][6]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][7]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][8]),
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][9]),
+                ],
+                [
+                    telegram.KeyboardButton(config.options["watermark_fontsize"][10]),
+                    telegram.KeyboardButton(config.message_commands["cancel"])
+                ]
+            ]
+
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["set_options"],
+            reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
+            ),
+
             
     else:
         pass # do nothing
@@ -413,14 +445,24 @@ async def inputed_options_handler(inp, context):
             )
         
         ###########################################################################
-        if inp.effective_message.text in config.options["watermark_opacity"]:
+        elif inp.effective_message.text in config.options["watermark_opacity"]:
             _set_bot_mode("standby")
             _opacity = config.options_values["watermark_opacity"][config.options["watermark_opacity"].index(inp.effective_message.text)]
             databace.update_options("opacity", _opacity)
+
             await bot.send_message(inp.effective_message.chat_id, config.bot_messages["option_added"],
             reply_markup= telegram.ReplyKeyboardMarkup(watermark_options_menu, resize_keyboard=True)
             )
-        
+
+        elif inp.effective_message.text in config.options["watermark_fontsize"]:
+            _set_bot_mode("standby")
+            _fontsize = config.options_values["watermark_fontsize"][config.options["watermark_fontsize"].index(inp.effective_message.text)]
+            databace.update_options("fontsize", _fontsize)
+
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["option_added"],
+            reply_markup= telegram.ReplyKeyboardMarkup(watermark_options_menu, resize_keyboard=True)
+            )
+
         
     else:
         pass # do noting
