@@ -30,7 +30,7 @@ main_menu = [
 
 watermark_options_menu = [
     [telegram.KeyboardButton(config.message_commands["watermark_text"]),telegram.KeyboardButton(config.options_text_commands["position"])],
-    [telegram.KeyboardButton(config.options_text_commands["fontsize"])],
+    [telegram.KeyboardButton(config.options_text_commands["fontsize"]), telegram.KeyboardButton(config.options_text_commands["color"])],
     [telegram.KeyboardButton(config.message_commands["cancel"]), telegram.KeyboardButton(config.options_text_commands["opacity"])]
 ]
 
@@ -192,7 +192,7 @@ async def process_watermark_command(inp : telegram.Update, context : ext.Context
         await bot.send_message(inp.effective_message.chat_id, config.bot_messages["starting_process_warning"])
 
         _watermark_position = config.options_values["watermark_position"][databace.get_options("position")]
-        
+        _watermark_color = config.options_values["watermark_color"][databace.get_options("color")]
         
         for _ in init.get_files("/file"):
 
@@ -202,7 +202,7 @@ async def process_watermark_command(inp : telegram.Update, context : ext.Context
             _temp_bot_2 = editor.TextClip(
                 txt = databace.get_watermark_text(),
                 fontsize=databace.get_options("fontsize"),
-                color="white"
+                color=_watermark_color
             )
 
             _temp_bot_2 = _temp_bot_2.set_position(_watermark_position)
@@ -325,7 +325,8 @@ async def text_message_handler(inp : telegram.Update, context : ext.ContextTypes
         elif inp.effective_message.text in [
             config.options_text_commands["position"],
             config.options_text_commands["opacity"],
-            config.options_text_commands["fontsize"]
+            config.options_text_commands["fontsize"],
+            config.options_text_commands["color"]
         ]:
             await options_keyboard_handler(inp= inp, context= context)
 
@@ -418,6 +419,35 @@ async def options_keyboard_handler(inp, context):
             reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
             ),
 
+        elif inp.effective_message.text == config.options_text_commands["color"]:
+            _set_bot_mode("set_watermark_options")
+            ###########################################################3
+
+            # "watermark_color" : ["white", "black", "blue", "green", "red"]
+
+            _key_board = [
+                [
+                    telegram.KeyboardButton(config.options["watermark_color"][0]), 
+                    telegram.KeyboardButton(config.options["watermark_color"][1])
+                ],
+                [
+                    telegram.KeyboardButton(config.options["watermark_color"][2]),
+                    telegram.KeyboardButton(config.options["watermark_color"][3]),
+                    telegram.KeyboardButton(config.options["watermark_color"][4])
+                ],
+                [
+                    telegram.KeyboardButton(config.message_commands["cancel"])
+                ]
+            
+                
+            ]
+            
+
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["set_options"],
+            reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
+            ),
+
+
             
     else:
         pass # do nothing
@@ -463,6 +493,16 @@ async def inputed_options_handler(inp, context):
             reply_markup= telegram.ReplyKeyboardMarkup(watermark_options_menu, resize_keyboard=True)
             )
 
+        elif inp.effective_message.text in config.options["watermark_color"]:
+            _set_bot_mode("standby")
+
+            _color = config.options["watermark_color"].index(inp.effective_message.text)
+            databace.update_options("color", _color)
+
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["option_added"],
+            reply_markup= telegram.ReplyKeyboardMarkup(watermark_options_menu, resize_keyboard=True)
+            )
+            
         
     else:
         pass # do noting

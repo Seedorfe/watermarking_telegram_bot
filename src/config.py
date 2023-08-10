@@ -62,7 +62,8 @@ get_bot_mode = ""
 options_text_commands = {
     "position" : "مکان",
     "opacity": "شفافیت",
-    "fontsize": "انداره"
+    "fontsize": "انداره",
+    "color": "رنگ"
 } 
 
 list_options_text_commands = [
@@ -72,14 +73,18 @@ list_options_text_commands = [
 options = {
     "watermark_position": ["بالا", "وسط", "پایین"],
     "watermark_opacity": ["بدون شفافیت", "کم", "متوسط", "زیاد"],
-    "watermark_fontsize" : ["10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"]
+    "watermark_fontsize" : ["10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"],
+    "watermark_color" : ["سفیذ", "سیاه", "آبی", "سبز", "قرمز"]
 }
 
 # "center" "top" "bottom"
 options_values = {
     "watermark_position" : ["top", "center", "bottom"],
     "watermark_opacity" : [1, 0.75, 0.5, 0.25],
-    "watermark_fontsize" : [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]
+    "watermark_fontsize" : [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+    "watermark_color" : ["white", "black", "blue", "green", "red"]
+    
+
 }
 
 

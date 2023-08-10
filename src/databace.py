@@ -58,6 +58,7 @@ def creat_databace():
             INSERT INTO options VALUES (2, "duration", 10);
             INSERT INTO options VALUES (3, "position", 1);
             INSERT INTO options VALUES (4, "fontsize", 35);
+            INSERT INTO options VALUES (5, "color" , 0)
         """
         cursor.executescript(_sql_command)
 
@@ -133,7 +134,7 @@ def set_watermark_text(text):
 
 def update_options(name, var):
 
-    _options_names = ["opacity", "duration", "position", "fontsize"]
+    _options_names = ["opacity", "duration", "position", "fontsize", "color"]
     
     db = sqlite3.connect(config.ROOT_PATH + "/data/databace.db")
     cursor = db.cursor()
@@ -153,7 +154,7 @@ def update_options(name, var):
 
 def get_options(name):
 
-    _options_names = ["opacity", "duration", "position", "fontsize"]
+    _options_names = ["opacity", "duration", "position", "fontsize", "color"]
 
 
     db = sqlite3.connect(config.ROOT_PATH + "/data/databace.db")
