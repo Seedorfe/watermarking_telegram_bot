@@ -30,7 +30,7 @@ main_menu = [
 
 watermark_options_menu = [
     [telegram.KeyboardButton(config.message_commands["watermark_text"]),telegram.KeyboardButton(config.options_text_commands["position"])],
-    [telegram.KeyboardButton(config.message_commands["cancel"])]
+    [telegram.KeyboardButton(config.message_commands["cancel"]), telegram.KeyboardButton(config.options_text_commands["opacity"])]
 ]
 
 
@@ -321,7 +321,8 @@ async def text_message_handler(inp : telegram.Update, context : ext.ContextTypes
 
 
         elif inp.effective_message.text in [
-            config.options_text_commands["position"]
+            config.options_text_commands["position"],
+            config.options_text_commands["opacity"]
         ]:
             await options_keyboard_handler(inp= inp, context= context)
 
@@ -359,8 +360,9 @@ async def text_message_handler(inp : telegram.Update, context : ext.ContextTypes
 async def options_keyboard_handler(inp, context):
     
     if databace.get_admin_CHAT_ID() == inp.effective_message.chat_id:
-        _set_bot_mode("set_watermark_options")
+        
         if inp.effective_message.text == config.options_text_commands["position"]:
+            _set_bot_mode("set_watermark_options")
             _key_board = [
                 [telegram.KeyboardButton(config.options["watermark_position"][0])],
                 [telegram.KeyboardButton(config.options["watermark_position"][1])],
@@ -371,6 +373,19 @@ async def options_keyboard_handler(inp, context):
             await bot.send_message(inp.effective_message.chat_id, config.bot_messages["set_options"],
             reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
             ),
+
+        elif inp.effective_message.text == config.options_text_commands["opacity"]:
+            _set_bot_mode("set_watermark_options")
+            _key_board = [
+                [telegram.KeyboardButton(config.options["watermark_opacity"][0])],
+                [telegram.KeyboardButton(config.options["watermark_opacity"][1]),telegram.KeyboardButton(config.options["watermark_opacity"][2])],
+                [telegram.KeyboardButton(config.options["watermark_opacity"][3]),telegram.KeyboardButton(config.message_commands["cancel"])]
+            ]
+
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["set_options"],
+            reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
+            ),
+
             
     else:
         pass # do nothing
@@ -392,9 +407,20 @@ async def inputed_options_handler(inp, context):
         if inp.effective_message.text  in config.options["watermark_position"]:
             _set_bot_mode("standby")
             databace.update_options("position", config.options["watermark_position"].index(inp.effective_message.text))
+
             await bot.send_message(inp.effective_message.chat_id, config.bot_messages["option_added"],
             reply_markup= telegram.ReplyKeyboardMarkup(watermark_options_menu, resize_keyboard=True)
             )
+        
+        ###########################################################################
+        if inp.effective_message.text in config.options["watermark_opacity"]:
+            _set_bot_mode("standby")
+            _opacity = config.options_values["watermark_opacity"][config.options["watermark_opacity"].index(inp.effective_message.text)]
+            databace.update_options("opacity", _opacity)
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["option_added"],
+            reply_markup= telegram.ReplyKeyboardMarkup(watermark_options_menu, resize_keyboard=True)
+            )
+        
         
     else:
         pass # do noting

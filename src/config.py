@@ -60,7 +60,8 @@ get_bot_mode = ""
 
 
 options_text_commands = {
-    "position" : "مکان"
+    "position" : "مکان",
+    "opacity": "شفافیت"
 } 
 
 list_options_text_commands = [
@@ -68,12 +69,14 @@ list_options_text_commands = [
 ]
 
 options = {
-    "watermark_position": ["بالا", "وسط", "پایین"]
+    "watermark_position": ["بالا", "وسط", "پایین"],
+    "watermark_opacity": ["بدون شفافیت", "کم", "متوسط", "زیاد"]
 }
 
 # "center" "top" "bottom"
 options_values = {
-    "watermark_position" : ["top", "center", "bottom"]
+    "watermark_position" : ["top", "center", "bottom"],
+    "watermark_opacity" : [1, 0.75, 0.5, 0.25]
 }
 
 
