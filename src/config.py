@@ -4,19 +4,22 @@ Written by Seedorfe
 """
 
 
+
+
+# write your bot token here
 BOT_TOKEN = ""
 
 
-
+# use init.find_root_path() to set
 ROOT_PATH = ""
 
 
-
+# upload file limitation 
 PROCESS_UPLOAD_FILE_LIMIT = 100
 
 
 
-
+# this messages are like commands
 message_commands = {
     "set_admin" : "شروع به عنوان ادمین",
     "process" : "پردازش",
@@ -30,7 +33,7 @@ message_commands = {
 
 }
 
-
+# messages that bot can send
 bot_messages = {
     "admin_seted" : "شما ادمین شدید",
     "main_menu": "منوی اصلی",
@@ -47,7 +50,7 @@ bot_messages = {
     
 }
 
-
+# we using bot_modes whene change options 
 bot_modes = {
     "standby": "standby",
     "set_watermark_text" : "set_watermark_text",
@@ -55,10 +58,11 @@ bot_modes = {
 }
 
 
+# bot mode
 get_bot_mode = ""
 
 
-
+# watermark options list 
 options_text_commands = {
     "position" : "مکان",
     "opacity": "شفافیت",
@@ -66,10 +70,13 @@ options_text_commands = {
     "color": "رنگ"
 } 
 
-list_options_text_commands = [
-    "مکان"
-]
 
+# not used
+# list_options_text_commands = [
+#     "مکان"
+# ]
+
+# this options inputed from key board to change watermark style
 options = {
     "watermark_position": ["بالا", "وسط", "پایین"],
     "watermark_opacity": ["بدون شفافیت", "کم", "متوسط", "زیاد"],
@@ -77,7 +84,7 @@ options = {
     "watermark_color" : ["سفید", "سیاه", "آبی", "سبز", "قرمز"]
 }
 
-# "center" "top" "bottom"
+# using to convert inputed options from key board to what data bace can store
 options_values = {
     "watermark_position" : ["top", "center", "bottom"],
     "watermark_opacity" : [1, 0.75, 0.5, 0.25],
@@ -86,7 +93,7 @@ options_values = {
 }
 
 
-
+# help message for help command
 HELP_MESSAGE = """برای دسترسی به منوی اصلی عبارت های زیر را ارسال کنید
 "منو","menu","/start"
 
