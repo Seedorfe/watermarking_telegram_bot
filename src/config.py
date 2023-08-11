@@ -74,7 +74,7 @@ options = {
     "watermark_position": ["بالا", "وسط", "پایین"],
     "watermark_opacity": ["بدون شفافیت", "کم", "متوسط", "زیاد"],
     "watermark_fontsize" : ["10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"],
-    "watermark_color" : ["سفیذ", "سیاه", "آبی", "سبز", "قرمز"]
+    "watermark_color" : ["سفید", "سیاه", "آبی", "سبز", "قرمز"]
 }
 
 # "center" "top" "bottom"
@@ -82,9 +82,13 @@ options_values = {
     "watermark_position" : ["top", "center", "bottom"],
     "watermark_opacity" : [1, 0.75, 0.5, 0.25],
     "watermark_fontsize" : [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
-    "watermark_color" : ["white", "black", "blue", "green", "red"]
-    
-
+    "watermark_color" : ["white", "black", "blue", "green", "red"]   
 }
 
 
+
+HELP_MESSAGE = """برای دسترسی به منوی اصلی عبارت های زیر را ارسال کنید
+"منو","menu","/start"
+
+برای واتر مارک کردن, ویدعو ها را اپدیت و در منوی اصلی کلید پردازش را لمس کنید
+"""

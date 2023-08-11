@@ -75,6 +75,7 @@ async def start_command(inp : telegram.Update, context : ext.ContextTypes.DEFAUL
         # reply_markup= telegram.ReplyKeyboardMarkup(_key_board, resize_keyboard=True)
         # )
 
+        _set_bot_mode("standby")
         await bot.send_message(inp.effective_message.chat_id, config.bot_messages["main_menu"],
         reply_markup=telegram.ReplyKeyboardMarkup(main_menu, resize_keyboard=True))
         
@@ -315,7 +316,15 @@ async def text_message_handler(inp : telegram.Update, context : ext.ContextTypes
                 reply_markup=telegram.ReplyKeyboardMarkup(main_menu, resize_keyboard=True))
         
 
+        elif inp.message.text == config.message_commands["status"]:
             
+            await status_command(inp =inp, context= context)
+        
+        elif inp.message.text == config.message_commands["help"]:
+            await help_command(inp=inp, context= context)
+        
+        elif inp.message.text == config.message_commands["delete_videos"]:
+            await clear_files_command(inp = inp, context= context)
 
             #################################################
             #################################################
@@ -331,8 +340,15 @@ async def text_message_handler(inp : telegram.Update, context : ext.ContextTypes
             await options_keyboard_handler(inp= inp, context= context)
 
 
-
+        elif inp.effective_message.text in ["منو", "menu"]:
+            _set_bot_mode("standby")
+            await bot.send_message(inp.effective_message.chat_id, config.bot_messages["main_menu"],
+            reply_markup=telegram.ReplyKeyboardMarkup(main_menu, resize_keyboard=True))
+        
+        
+            #################################################33
         else: # if bot gets a text that wasnt in message_commands
+            
             if _get_bot_mode() == config.bot_modes["set_watermark_text"]:
                 databace.set_watermark_text(inp.message.text)
                 _set_bot_mode("standby")
@@ -508,16 +524,58 @@ async def inputed_options_handler(inp, context):
         pass # do noting
 
 
+async def help_command(inp : telegram.Update, context : ext.ContextTypes.DEFAULT_TYPE):
+
+    if databace.get_admin_CHAT_ID() == inp.effective_message.chat_id:
+
+        await bot.send_message(inp.effective_message.chat_id, config.HELP_MESSAGE)
+
+
+
+async def status_command(inp : telegram.Update, context : ext.ContextTypes.DEFAULT_TYPE):
+    
+    if databace.get_admin_CHAT_ID() == inp.effective_message.chat_id:
+
+        _status_messsage = f"""
+            تعداد فایل های در انتظار پردازش:  {len(init.get_files("/file"))}
+            واتر مارک : {databace.get_watermark_text()} 
+            مکان: {config.options["watermark_position"][databace.get_options("position")]}
+            رنگ: {config.options["watermark_color"][databace.get_options("color")]}
+            شفافیت: {config.options["watermark_opacity"][config.options_values["watermark_opacity"].index(databace.get_options("opacity"))]}
+            اندازه: {databace.get_options("fontsize")}
+            
+        """
+
+        await bot.send_message(inp.effective_message.chat_id, _status_messsage)
+
+
+async def clear_files_command(inp : telegram.Update, context : ext.ContextTypes.DEFAULT_TYPE):
+    if databace.get_admin_CHAT_ID() == inp.effective_message.chat_id:
+        init.clear_files("/file")
+        init.clear_files("/temp")
+        init.clear_files("/export")
+
+        await bot.send_message(inp.effective_message.chat_id, "فایل های آماده پردازش حذف شدند",
+        reply_markup = telegram.ReplyKeyboardMarkup(main_menu, resize_keyboard=True)
+        )
+
+
 def run_bot():
     '''run bot'''
 
     # app = ext.Application.builder().token(config.BOT_TOKEN).build()
+
+    init.clear_files("/temp")
+    init.clear_files("/export")
+
 
     app.add_handler(ext.CommandHandler("start", start_command))
     app.add_handler(ext.CallbackQueryHandler(button_quary_handler))
     app.add_handler(ext.MessageHandler(ext.filters.VIDEO, video_handler))
     app.add_handler(ext.CommandHandler("process", process_watermark_command))
     app.add_handler(ext.MessageHandler(ext.filters.TEXT & ~ext.filters.COMMAND, text_message_handler))
+    app.add_handler(ext.CommandHandler("help", help_command))
+    app.add_handler(ext.CommandHandler("status", status_command))
     
 
     # bot = app.bot
