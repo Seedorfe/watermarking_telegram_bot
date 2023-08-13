@@ -203,7 +203,8 @@ async def process_watermark_command(inp : telegram.Update, context : ext.Context
             _temp_bot_2 = editor.TextClip(
                 txt = databace.get_watermark_text(),
                 fontsize=databace.get_options("fontsize"),
-                color=_watermark_color
+                color=_watermark_color,
+                font="LMU-Vazir"
             )
 
             _temp_bot_2 = _temp_bot_2.set_position(_watermark_position)
