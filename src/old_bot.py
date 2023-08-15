@@ -552,6 +552,7 @@ async def status_command(inp : telegram.Update, context : ext.ContextTypes.DEFAU
 
 async def clear_files_command(inp : telegram.Update, context : ext.ContextTypes.DEFAULT_TYPE):
     if databace.get_admin_CHAT_ID() == inp.effective_message.chat_id:
+        
         init.clear_files("/file")
         init.clear_files("/temp")
         init.clear_files("/export")

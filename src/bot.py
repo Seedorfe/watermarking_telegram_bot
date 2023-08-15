@@ -180,6 +180,210 @@ async def process_watermark_command(event):
     
 
 
+async def status_command(event):
+
+    _status_messsage = f"""
+        تعداد فایل های در انتظار پردازش:  {len(init.get_files("/file"))}
+        واتر مارک : {databace.get_watermark_text()} 
+        مکان: {config.options["watermark_position"][databace.get_options("position")]}
+        رنگ: {config.options["watermark_color"][databace.get_options("color")]}
+        شفافیت: {config.options["watermark_opacity"][config.options_values["watermark_opacity"].index(databace.get_options("opacity"))]}
+        اندازه: {databace.get_options("fontsize")}
+            
+    """
+
+    await client.send_message(
+        entity = event.chat_id,
+        message = _status_messsage
+    )
+
+
+async def help_command(event):
+
+    await client.send_message(
+        entity = event.chat_id,
+        message = config.HELP_MESSAGE
+    )
+    
+
+
+async def clear_files_command(event):
+
+    init.clear_files("/file")
+    init.clear_files("/temp")
+    init.clear_files("/export")
+
+    await client.send_message(
+        entity = event.chat_id,
+        message = "فایل های آماده پردازش حذف شدند",
+        buttons = main_menu 
+    )
+
+
+
+async def options_keyboard_handler(event):
+
+    if event.message.text == config.options_text_commands["position"]:
+        _set_bot_mode("set_watermark_options")
+        _key_board = [
+            [telethon.Button.text(config.options["watermark_position"][0], resize=True)],
+            [telethon.Button.text(config.options["watermark_position"][1], resize=True)],
+            [telethon.Button.text(config.options["watermark_position"][2], resize=True)],
+            [telethon.Button.text(config.message_commands["cancel"], resize=True)]
+        ]
+        
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["set_options"],
+            buttons = _key_board
+        )
+    
+    elif event.message.text == config.options_text_commands["opacity"]:
+
+        _set_bot_mode("set_watermark_options")
+        _key_board = [
+            [
+                telethon.Button.text(config.options["watermark_opacity"][0], resize=True)
+            ],
+            [
+                telethon.Button.text(config.options["watermark_opacity"][1], resize=True),
+                telethon.Button.text(config.options["watermark_opacity"][2], resize=True)
+            ],
+            [
+                telethon.Button.text(config.options["watermark_opacity"][3], resize=True),
+                telethon.Button.text(config.message_commands["cancel"], resize=True)
+            ]
+        ]
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["set_options"],
+            buttons = _key_board
+        )
+    
+
+    elif event.message.text == config.options_text_commands["fontsize"]:
+
+
+        _set_bot_mode("set_watermark_options")
+        # "watermark_fontsize" : ["10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"]
+        _key_board = [
+            [
+                telethon.Button.text(config.options["watermark_fontsize"][0], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][1], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][2], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][3], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][4], resize=True)
+            ],
+            [
+                telethon.Button.text(config.options["watermark_fontsize"][5], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][6], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][7], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][8], resize=True),
+                telethon.Button.text(config.options["watermark_fontsize"][9], resize=True),
+            ],
+            [
+                telethon.Button.text(config.options["watermark_fontsize"][10], resize=True),
+                telethon.Button.text(config.message_commands["cancel"], resize=True)
+            ]
+        ]
+
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["set_options"],
+            buttons = _key_board
+        )
+    
+    elif event.message.text == config.options_text_commands["color"]:
+
+        _set_bot_mode("set_watermark_options")
+
+
+        # "watermark_color" : ["white", "black", "blue", "green", "red"]
+
+        _key_board = [
+            [
+                telethon.Button.text(config.options["watermark_color"][0], resize=True), 
+                telethon.Button.text(config.options["watermark_color"][1], resize=True)
+            ],
+            [
+                telethon.Button.text(config.options["watermark_color"][2], resize=True),
+                telethon.Button.text(config.options["watermark_color"][3], resize=True),
+                telethon.Button.text(config.options["watermark_color"][4], resize=True)
+            ],
+            [
+                telethon.Button.text(config.message_commands["cancel"], resize=True)
+            ]       
+        ]
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["set_options"],
+            buttons = _key_board
+        )
+    
+            
+
+
+async def inputed_options_handler(event):
+
+    if event.message.text  in config.options["watermark_position"]:
+        _set_bot_mode("standby")
+        databace.update_options("position", config.options["watermark_position"].index(event.message.text))
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["option_added"],
+            buttons = watermark_options_menu
+        )
+        
+    elif event.message.text in config.options["watermark_opacity"]:
+        _set_bot_mode("standby")
+        _opacity = config.options_values["watermark_opacity"][config.options["watermark_opacity"].index(event.message.text)]
+        databace.update_options("opacity", _opacity)
+
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["option_added"],
+            buttons = watermark_options_menu
+        )
+
+    elif event.message.text in config.options["watermark_fontsize"]:    
+        _set_bot_mode("standby")
+        _fontsize = config.options_values["watermark_fontsize"][config.options["watermark_fontsize"].index(event.message.text)]
+        databace.update_options("fontsize", _fontsize)
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["option_added"],
+            buttons = watermark_options_menu
+        )
+
+    elif event.message.text in config.options["watermark_color"]:
+
+        _set_bot_mode("standby")
+
+        _color = config.options["watermark_color"].index(event.message.text)
+        databace.update_options("color", _color)
+
+        await client.send_message(
+            entity = event.chat_id,
+            message = config.bot_messages["option_added"],
+            buttons = watermark_options_menu
+        )
+
+
+
+
+
+
+    
+
+    
+
+
 
 
 
@@ -264,6 +468,50 @@ async def message_handloer_core(event):
                         buttons = main_menu
                     )
 
+            elif event.message.text == config.message_commands["status"]:
+                await start_command(event=event)
+            elif event.message.text == config.message_commands["help"]:
+                await help_command(event=event)
+            elif event.message.text == config.message_commands["delete_videos"]:
+                await clear_files_command(event=event)
+
+
+            elif event.message.text in [
+                config.options_text_commands["position"],
+                config.options_text_commands["opacity"],
+                config.options_text_commands["fontsize"],
+                config.options_text_commands["color"]
+            ]:
+                await options_keyboard_handler(event=event)
+     
+        
+
+
+            elif event.message.text in ["منو", "menu", "/start"]:
+                _set_bot_mode("standby")
+                await client.send_message(
+                    entity = event.chat_id,
+                    message = config.bot_messages["main_menu"],
+                    buttons = main_menu
+                )
+
+
+            else: # if bot gets a text from admin that wasnt in message_commands
+                
+                if _get_bot_mode() == config.bot_modes["set_watermark_text"]:
+                    databace.set_watermark_text(event.message.text)
+                    _set_bot_mode("standby")
+
+                    await client.send_message(
+                        entity = event.chat_id,
+                        message = config.bot_messages["watermark_text_seted"],
+                        buttons = watermark_options_menu
+                    )
+
+                elif _get_bot_mode() == config.bot_modes["set_watermark_options"]:
+                    await inputed_options_handler(event=event)
+
+
 
         else: # if who sends message was not admin
             
@@ -296,6 +544,10 @@ async def message_handloer_core(event):
 
 
 async def run_bot():
+
+    init.clear_files("/temp")
+    init.clear_files("/export")
+    _set_bot_mode("standby")
 
 
     await client.start(bot_token=config.BOT_TOKEN) 
