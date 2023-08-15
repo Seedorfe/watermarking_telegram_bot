@@ -8,7 +8,8 @@ Written by Seedorfe
 
 # write your bot token here
 BOT_TOKEN = ""
-
+API_ID = 0
+API_HASH = ""
 
 # use init.find_root_path() to set
 ROOT_PATH = ""

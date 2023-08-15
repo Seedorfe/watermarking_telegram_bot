@@ -3,6 +3,7 @@
 Written by Seedorfe
 """
 
+import asyncio
 
 
 import init
@@ -14,7 +15,8 @@ def main():
     init.find_root_path()
     init.make_needed_dir()
     databace.creat_databace()
-    bot.run_bot()
+
+    asyncio.run(bot.run_bot())
 
 
 
