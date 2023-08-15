@@ -469,7 +469,7 @@ async def message_handloer_core(event):
                     )
 
             elif event.message.text == config.message_commands["status"]:
-                await start_command(event=event)
+                await status_command(event=event)
             elif event.message.text == config.message_commands["help"]:
                 await help_command(event=event)
             elif event.message.text == config.message_commands["delete_videos"]:
