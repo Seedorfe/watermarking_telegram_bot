@@ -11,6 +11,13 @@ BOT_TOKEN = ""
 API_ID = 0
 API_HASH = ""
 
+
+# if you do not use a special port set it on 0
+CONNECTION_PORT = 65501
+
+
+
+
 # use init.find_root_path() to set
 ROOT_PATH = ""
 

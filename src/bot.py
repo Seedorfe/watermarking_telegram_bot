@@ -14,12 +14,17 @@ import init
 import databace
 
 
+
+
+
 # we also use bot token
 client = telethon.TelegramClient(
     config.ROOT_PATH +"watermarkBot",
     config.API_ID,
-    config.API_HASH
+    config.API_HASH,
 )
+
+
 
 
 main_menu = [
